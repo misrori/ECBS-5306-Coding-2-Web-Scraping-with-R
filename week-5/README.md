@@ -91,6 +91,23 @@ Skyscaner api
 
 <https://skyscanner.github.io/slate/#api-documentation>
 
+``` r
+# tripdays <- 1:15
+# origins <- list(list('c'= 'HU', 'a' = "BUD"), list('c'='MT', 'a'= 'MLA'), list('c'='ES', 'a'='BCN'), list('c'='UK', 'a'='STN'), list('c'='UK', 'a'= 'STN'))
+# currency <- 'EUR'
+
+from <- Sys.Date()+20
+to <- Sys.Date()+30
+origin_country <- 'HU'
+currency <- 'HUF'
+origin_city_id <- 'BUD'
+api_key <- readRDS('/home/mihaly/R_codes/ECBS-5306-Coding-2-Web-Scraping-with-R/week-5/api_key.rds')
+
+sky_url<-paste0("https://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/",origin_country,"/",currency,"/en-US/",origin_city_id,"-sky/Anywhere/",from,"/",to,"?apiKey=",api_key)
+df <- fromJSON(sky_url, flatten = T)
+head(df$Quotes)
+```
+
     ##   QuoteId MinPrice Direct       QuoteDateTime OutboundLeg.CarrierIds
     ## 1       1    11733   TRUE 2021-11-30T12:11:00                   1090
     ## 2       2    12012   TRUE 2021-11-30T12:45:00                   1090
