@@ -1,0 +1,77 @@
+
+---
+title: "Web scraping week 6"
+output:
+  md_document:
+    toc: true
+    variant: markdown_github
+  output_file: README.md
+---
+
+```{md, echo=F, include=F, eval=F}
+
+<details>
+  <summary>Summary Goes Here</summary>
+  ...this is hidden, collapsable content...
+</details>
+  
+  
+
+  
+  
+```
+
+```{r}
+
+library(rvest)
+library(data.table)
+library(jsonlite)
+library(httr)
+library(XML)
+library(leaflet)
+
+```
+
+# MNB scraper
+
+Open this site and find the data source https://fiokesatmkereso.mnb.hu/web/index.html
+
+```{r, echo=F}
+
+
+t<-xmlToList('/home/mihaly/R_codes/ECBS-5306-Coding-2-Web-Scraping-with-R/week-6/banks.txt')
+my_df <- 
+  rbindlist(lapply( t$Body$GetAtmsAndBranchesResponse$GetAtmsAndBranchesResult$entity_list_response, function(x){
+    return(cbind(
+      data.frame(x$attributes[x$attributes!='NULL']), 
+      data.frame(x$location[x$location!='NULL']), 
+      data.frame(x$coordinates[x$coordinates!='NULL'])))
+  }), fill = T)
+my_df$center.lon <- as.numeric(substring(my_df$center.lon,1,9))*10
+my_df$center.lat <- as.numeric(substring(my_df$center.lat,1,9))*10
+
+
+#saveRDS(my_df, 'clean_data.rds')
+ #label = ~as.character(varoscity)
+
+```
+
+```{r}
+head(my_df)
+
+```
+
+
+
+Show your result in a map
+```{r, eval=FALSE, echo=FALSE}
+
+leaflet(my_df) %>% addTiles() %>%
+  addMarkers(~as.numeric(center.lon), ~as.numeric(center.lat),
+             popup = ~paste(sep = "<br/>", as.character(varos), as.character(megye) ))
+```
+
+# Selenium demo
+
+# Shiny demo
+
