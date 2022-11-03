@@ -6,7 +6,7 @@
 -   [Week 1](#week-1)
 -   [Contact](#contact)
 
-In this repository you will find the code of the "Coding 2: Web Scraping with R" course in the 2020/2021 Fall term, part of the MSc in Business Analytics at CEU.
+In this repository you will find the code of the "Coding 2: Web Scraping with R" course in the 2022/2023 Fall term, part of the MSc in Business Analytics at CEU.
 
 Web scraping with R
 ===================
