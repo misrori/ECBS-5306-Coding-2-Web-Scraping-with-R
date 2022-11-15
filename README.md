@@ -4,6 +4,7 @@
 -   [Assignments](#assignments)
 -   [Schedule](#schedule)
 -   [Week 1](#week-1)
+-   [Week 2](#week-2)
 -   [Contact](#contact)
 
 In this repository you will find the code of the "Coding 2: Web Scraping with R" course in the 2022/2023 Fall term, part of the MSc in Business Analytics at CEU.
@@ -52,6 +53,14 @@ Week 1
 -   HTML structure
 -   Object selector with css [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb)
 
+Week 2
+======
+
+-   Rvest
+-   Functions
+-   [Coindesk](week-2#coindesk)
+-   [Infoworld scraper](week-2#infoworld-scraper)
+-   [Yachtworld scraper](week-2#yachtworld-scraper)
 Contact
 =======
 
