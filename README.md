@@ -58,9 +58,10 @@ Week 2
 
 -   Rvest
 -   Functions
--   [Coindesk](week-2#coindesk)
--   [Infoworld scraper](week-2#infoworld-scraper)
--   [Yachtworld scraper](week-2#yachtworld-scraper)
+-   [Coindesk](https://github.com/misrori/ECBS-5306-Coding-2-Web-Scraping-with-R/tree/2022/week-2#coindesk)
+-   [Infoworld scraper](https://github.com/misrori/ECBS-5306-Coding-2-Web-Scraping-with-R/tree/2022/week-2#infoworld-scraper)
+-   [Yachtworld scraper](https://github.com/misrori/ECBS-5306-Coding-2-Web-Scraping-with-R/tree/2022/week-2#yachtworld-scraper)
+
 Contact
 =======
 
