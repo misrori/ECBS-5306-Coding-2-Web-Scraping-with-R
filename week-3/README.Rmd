@@ -1,0 +1,179 @@
+
+---
+title: "Web scraping week 3"
+<!-- output: html_document -->
+output: 
+  md_document:
+  toc: true
+  variant: markdown_github
+  output_file: README.md
+---
+
+```{md, echo=F, include=F, eval=F}
+
+<details>
+  <summary>Summary Goes Here</summary>
+  ...this is hidden, collapsable content...
+</details>
+  
+  output:
+  md_document:
+    toc: true
+    variant: markdown_github
+  output_file: README.md
+# 
+# output:html_document  
+  
+  
+```
+
+```{r}
+
+library(rvest)
+library(data.table)
+
+```
+
+
+# Yachtworld scraper
+The base url is https://www.yachtworld.co.uk/boats-for-sale/
+
+
+```{r}
+# scraper for one page 
+url <- 'https://www.yachtworld.co.uk/yacht/2021-ryck-280-8036770/'
+t_list <- list()
+
+t <- read_html(url)
+t_list[['title']] <- t %>% html_node('.heading') %>% html_text()
+t_list[['length']] <- t %>% html_nodes('.boat-length') %>% html_text()
+t_list[['price']] <- t %>% html_nodes('.payment-total') %>% html_text()
+t_list[['location']] <- t %>% html_node('.location') %>% html_text()
+
+
+keys <- t %>% html_nodes('.datatable-title') %>% html_text()
+values <- t %>% html_nodes('.datatable-value') %>% html_text()
+if (length(keys)==length(values)) {
+  for (i in 1:length(keys)) {
+    t_list[[keys[i]]] <- values[i]
+  }
+}
+
+
+
+get_one_yachts  <- function(url) {
+  t_list <- list()
+  
+  t <- read_html(url)
+  t_list[['title']] <- t %>% html_node('.heading') %>% html_text()
+  t_list[['length']] <- t %>% html_nodes('.boat-length') %>% html_text()
+  t_list[['price']] <- t %>% html_nodes('.payment-total') %>% html_text()
+  t_list[['location']] <- t %>% html_node('.location') %>% html_text()
+  
+  
+  keys <- t %>% html_nodes('.datatable-title') %>% html_text()
+  values <- t %>% html_nodes('.datatable-value') %>% html_text()
+  if (length(keys)==length(values)) {
+    for (i in 1:length(keys)) {
+      t_list[[keys[i]]] <- values[i]
+    }
+  }
+  return(t_list)
+
+}
+
+get_one_yachts('https://www.yachtworld.co.uk/yacht/2021-ryck-280-8036770/')
+
+```
+
+
+```{r}
+# get_all_link 
+get_one_page_link  <- function(url) {
+  t  <- read_html(url)
+  all_link <- t %>% html_nodes('a') %>% html_attr('href')
+  boat_link <- all_link[startsWith(all_link, 'https://www.yachtworld.co.uk/yacht/')] 
+  return(boat_link)
+}
+# try
+get_one_page_link('https://www.yachtworld.co.uk/boats-for-sale/?page=2')
+
+
+pages_for_link  <- paste0('https://www.yachtworld.co.uk/boats-for-sale/?page=', 1:5)
+
+boat_links <- sapply(pages_for_link,get_one_page_link)
+
+
+
+
+data_list <- lapply(boat_links[1:20], get_one_yachts)
+
+df <- rbindlist(data_list, fill = T)
+
+
+```
+
+# Tasks : ultimatespecs scraper
+
+Open that site: https://www.ultimatespecs.com/car-specs/Tesla/M8552/Model-S and get the links of the cars
+
+
+```{r}
+t <- read_html('https://www.ultimatespecs.com/car-specs/Tesla')
+linkek <- t %>% html_nodes('.someOtherRow a') %>% html_attr('href')
+
+links <- paste0('https://www.ultimatespecs.com',linkek[endsWith(linkek, '.html')])
+
+```
+
+
+Write a function that will take one link and return with a list containing the specifications, the name, and the link.
+
+```{r, eval=FALSE}
+
+get_one_car_details <- function(url) {
+  #Sys.sleep(sample(10:30, 1))
+  print(url)
+  t_list <- list()
+  
+  t <- read_html(url)
+  t_list[['name']] <- t %>% html_node('h1') %>% html_text()
+  t_list[['link']] <- url
+
+  
+  keys <- t %>% html_nodes('.tabletd') %>% html_text()
+  keys<- trimws(gsub(':', '', keys, fixed = T))
+  
+  values <- t %>% html_nodes('.tabletd_right') %>% html_text()
+  values <- trimws(values)
+  
+  if (length(keys)==length(values)) {
+    for (i in 1:length(keys)) {
+      t_list[[keys[i]]] <- values[i]
+    }
+  }
+  return(t_list)
+
+}
+
+
+
+```
+
+
+
+
+```{r, eval=F}
+# if it runs to error, that means that you have to many request
+t <- get_one_car_details('https://www.ultimatespecs.com/car-specs/Tesla/106267/Tesla-Model-S-70.html')
+
+str(t)
+
+df <- rbindlist(lapply(links[1:5], get_one_car_details), fill = T)
+
+saveRDS(df, 'TSLAcars.rds')
+head(df,1)
+
+# https://deathtimeline.com/
+```
+
